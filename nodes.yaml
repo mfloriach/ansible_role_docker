@@ -1,0 +1,15 @@
+- name: Install Docker and docker compose
+  hosts: all
+  become: true
+  roles:
+    - role: docker
+      tags: installation
+      when: 
+        - env == "development"
+        - ansible_facts['os_family'] == 'Debian'
+
+    - role: orchestrator
+      tags: orchestrator
+      when: 
+        - env == "development"
+        - ansible_facts['os_family'] == 'Debian'

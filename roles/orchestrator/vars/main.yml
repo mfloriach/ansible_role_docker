@@ -1,0 +1,4 @@
+---
+# vars file for orchestrator
+repo: "example"
+branch: "main"

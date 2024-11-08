@@ -1,0 +1,61 @@
+---
+# tasks file for docker
+- name: Update apt packages
+  apt:
+    update_cache: yes
+    state: latest
+  tags: 
+    - ubuntu
+
+- name: Install required system packages
+  apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    state: latest
+    update_cache: true
+  tags: 
+    - ubuntu
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  tags: 
+    - ubuntu
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: present
+  tags: 
+    - ubuntu
+
+- name: Install a list of packages
+  ansible.builtin.apt:
+    pkg:
+    - docker-ce 
+    - docker-ce-cli 
+    - containerd.io 
+    - docker-buildx-plugin 
+    - docker-compose-plugin
+  tags: 
+    - ubuntu
+
+- name: Ensure group "docker" exists with correct gid
+  ansible.builtin.group:
+    name: docker
+    state: present
+    gid: 175
+  tags: 
+    - ubuntu
+
+- name: adding existing user
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
+  tags: 
+    - ubuntu
